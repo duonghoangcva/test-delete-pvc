@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: php-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/your-org/gitops.git
+        revision: main
+        directories:
+          - path: apps/*
+          - path: apps/mysql
+            exclude: true
+  template:
+    metadata:
+      name: '{{ index .path.segments 1 }}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/your-org/gitops.git
+        targetRevision: main
+        path: charts/php-app
+        helm:
+          valueFiles:
+            - '../../{{ .path.path }}/values.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ index .path.segments 1 }}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

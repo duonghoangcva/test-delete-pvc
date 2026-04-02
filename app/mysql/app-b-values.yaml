@@ -1,0 +1,18 @@
+image:
+  registry: docker.io
+  repository: bitnamilegacy/mysql
+  tag: 9.4.0-debian-12-r1
+
+auth:
+  rootPassword: rootpass123
+  database: laravel
+  username: laravel
+  password: laravelpass
+
+primary:
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 8Gi
+
+architecture: standalone

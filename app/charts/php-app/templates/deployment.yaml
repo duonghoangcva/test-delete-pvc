@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-app
+  template:
+    metadata:
+      labels:
+        app: php-app
+    spec:
+      containers:
+        - name: php
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /var/www/html/storage/logs
+              touch /var/www/html/storage/logs/laravel.log
+              echo "started" >> /var/www/html/storage/logs/laravel.log
+              apache2-foreground
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: php-logs
+              mountPath: /var/www/html/storage/logs
+
+        {{- if .Values.promtail.enabled }}
+        - name: promtail
+          image: "{{ .Values.promtail.image.repository }}:{{ .Values.promtail.image.tag }}"
+          imagePullPolicy: {{ .Values.promtail.image.pullPolicy }}
+          args:
+            - -config.file=/etc/promtail/promtail.yaml
+          volumeMounts:
+            - name: php-logs
+              mountPath: /var/www/html/storage/logs
+            - name: promtail-config
+              mountPath: /etc/promtail
+        {{- end }}
+
+      volumes:
+        - name: php-logs
+          persistentVolumeClaim:
+            claimName: php-logs
+        {{- if .Values.promtail.enabled }}
+        - name: promtail-config
+          configMap:
+            name: promtail-config
+        {{- end }}

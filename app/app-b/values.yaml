@@ -1,0 +1,18 @@
+image:
+  repository: php
+  tag: "8.2-apache"
+
+persistence:
+  logs:
+    storageClass: standard
+    size: 1Gi
+
+mysql:
+  host: mysql.app-b.svc.cluster.local
+  port: 3306
+  database: laravel
+  username: laravel
+  password: laravelpass
+
+promtail:
+  enabled: false
