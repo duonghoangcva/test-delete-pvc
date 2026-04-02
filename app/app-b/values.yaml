@@ -13,3 +13,6 @@ mysql:
   database: laravel
   username: laravel
   password: laravelpass
+
+promtail:
+  enabled: false
