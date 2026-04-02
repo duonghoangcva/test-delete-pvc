@@ -4,7 +4,6 @@ image:
   pullPolicy: IfNotPresent
 
 promtail:
-  enabled: false
   image:
     repository: grafana/promtail
     tag: "3.0.0"
