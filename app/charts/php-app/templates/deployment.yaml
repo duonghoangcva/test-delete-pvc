@@ -29,7 +29,7 @@ spec:
             - name: php-logs
               mountPath: /var/www/html/storage/logs
 
-        {{- if .Values.promtail.enabled }}
+        {{- if (required "promtail.enabled is required" .Values.promtail.enabled) }}
         - name: promtail
           image: "{{ .Values.promtail.image.repository }}:{{ .Values.promtail.image.tag }}"
           imagePullPolicy: {{ .Values.promtail.image.pullPolicy }}
