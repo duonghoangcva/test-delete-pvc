@@ -8,24 +8,22 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: https://github.com/your-org/gitops.git
+        repoURL: https://github.com/duonghoangcva/test-delete-pvc.git
         revision: main
         directories:
-          - path: apps/*
-          - path: apps/mysql
-            exclude: true
+          - path: app/app-*
   template:
     metadata:
       name: '{{ index .path.segments 1 }}'
     spec:
       project: default
       source:
-        repoURL: https://github.com/your-org/gitops.git
+        repoURL: https://github.com/duonghoangcva/test-delete-pvc.git
         targetRevision: main
-        path: charts/php-app
+        path: app/charts/php-app
         helm:
           valueFiles:
-            - '../../{{ .path.path }}/values.yaml'
+            - ../../{{ index .path.segments 1 }}/values.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ index .path.segments 1 }}'

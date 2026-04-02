@@ -17,3 +17,28 @@ persistence:
     size: 1Gi
     accessModes:
       - ReadWriteOnce
+
+mysql:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnamilegacy/mysql
+    tag: 9.4.0-debian-12-r1
+
+  auth:
+    rootPassword: rootpass123
+    database: laravel
+    username: laravel
+    password: laravelpass
+
+  architecture: standalone
+
+  primary:
+    persistence:
+      enabled: true
+      storageClass: standard
+      size: 8Gi
+    persistentVolumeClaimRetentionPolicy:
+      enabled: true
+      whenDeleted: Delete
+      whenScaled: Retain
