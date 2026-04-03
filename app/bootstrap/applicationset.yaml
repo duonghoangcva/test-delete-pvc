@@ -21,9 +21,11 @@ spec:
         repoURL: https://github.com/duonghoangcva/test-delete-pvc.git
         targetRevision: main
         path: app/charts/php-app
-        helm:
-          valueFiles:
-            - ../../{{ index .path.segments 1 }}/values.yaml
+        plugin:
+          name: argocd-vault-plugin-helm
+          env:
+            - name: HELM_ARGS
+              value: '-f ../../{{ index .path.segments 1 }}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{ index .path.segments 1 }}'
