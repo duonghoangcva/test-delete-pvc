@@ -25,6 +25,9 @@ spec:
               apache2-foreground
           ports:
             - containerPort: 80
+          envFrom:
+          - secretRef:
+              name: app-secret
           volumeMounts:
             - name: php-logs
               mountPath: /var/www/html/storage/logs

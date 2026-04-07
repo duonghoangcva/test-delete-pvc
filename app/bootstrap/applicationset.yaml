@@ -14,7 +14,7 @@ spec:
           - path: app/app-*
   template:
     metadata:
-      name: '{{ index .path.segments 1 }}'
+      name: '{{ index .path.segments 1 | lower }}'
     spec:
       project: default
       source:
@@ -28,7 +28,7 @@ spec:
               value: '-f ../../{{ index .path.segments 1 }}/values.yaml'
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ index .path.segments 1 }}'
+        namespace: '{{ index .path.segments 1 | lower }}'
       syncPolicy:
         automated:
           prune: true

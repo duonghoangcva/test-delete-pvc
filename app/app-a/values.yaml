@@ -7,17 +7,18 @@ persistence:
     storageClass: standard
     size: 1Gi
 
-mysql:
-  host: mysql.app-a.svc.cluster.local
-  port: 3306
-  database: laravel
-  username: laravel
-  password: laravelpass
-
 promtail:
   enabled: true
   lokiPushUrl: http://loki-gateway.logging.svc.cluster.local/loki/api/v1/push
 
 secretData:
   username: <path:secret/data/argocd/test#username>
-  password: <path:secret/data/argocd/test#password>  
+  password: <path:secret/data/argocd/test#password>
+
+mysql:
+  enabled: true
+  auth:
+    database: <path:secret/data/argocd/app-a#MYSQL_DATABASE>
+    username: <path:secret/data/argocd/app-a#MYSQL_USERNAME>
+    password: <path:secret/data/argocd/app-a#MYSQL_PASSWORD>
+    rootPassword: <path:secret/data/argocd/app-a#MYSQL_ROOT_PASSWORD>
