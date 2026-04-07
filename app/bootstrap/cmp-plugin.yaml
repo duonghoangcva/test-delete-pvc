@@ -22,6 +22,8 @@ data:
           - sh
           - -c
           - |
+            helm repo add bitnami https://charts.bitnami.com/bitnami &&
+            helm repo build >/dev/null 2>&1 || true
             helm dependency build . &&
             helm template "$ARGOCD_APP_NAME" \
               --include-crds \
