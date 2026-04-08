@@ -26,13 +26,13 @@ spec:
           ports:
             - containerPort: 80
           envFrom:
-          - secretRef:
-              name: app-secret
+            - secretRef:
+                name: app-secret
           volumeMounts:
             - name: php-logs
               mountPath: /var/www/html/storage/logs
 
-        {{- if (required "promtail.enabled is required" .Values.promtail.enabled) }}
+{{- if (.Values.promtail.enabled | default false) }}
         - name: promtail
           image: "{{ .Values.promtail.image.repository }}:{{ .Values.promtail.image.tag }}"
           imagePullPolicy: {{ .Values.promtail.image.pullPolicy }}
@@ -43,14 +43,14 @@ spec:
               mountPath: /var/www/html/storage/logs
             - name: promtail-config
               mountPath: /etc/promtail
-        {{- end }}
+{{- end }}
 
       volumes:
         - name: php-logs
           persistentVolumeClaim:
             claimName: php-logs
-        {{- if .Values.promtail.enabled }}
+{{- if (.Values.promtail.enabled | default false) }}
         - name: promtail-config
           configMap:
             name: promtail-config
-        {{- end }}
+{{- end }}
