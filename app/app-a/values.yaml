@@ -21,4 +21,4 @@ mysql:
     database: <path:secret/data/argocd/app-a#MYSQL_DATABASE>
     username: <path:secret/data/argocd/app-a#MYSQL_USERNAME>
     password: <path:secret/data/argocd/app-a#MYSQL_PASSWORD>
-    rootPassword: <path:secret/data/argocd/app-a#MYSQL_ROOT_PASSWORD>
+    rootPassword: <path:secret/data/argocd/app-a#MYSQL_ROOT_PASSWORD> 

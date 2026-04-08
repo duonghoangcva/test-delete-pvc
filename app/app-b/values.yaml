@@ -16,3 +16,7 @@ mysql:
 
 promtail:
   enabled: false
+
+secretData:
+  username: <path:secret/data/argocd/test#username>
+  password: <path:secret/data/argocd/test#password>  
