@@ -18,13 +18,12 @@ data:
             - -c
             - "find . -name 'Chart.yaml'"
       generate:
-        command:
-          - sh
-          - -c
+        command: [sh, -c]
+        args:
           - |
-            helm repo add bitnami https://charts.bitnami.com/bitnami &&
+            helm repo add bitnami https://charts.bitnami.com/bitnami >/dev/null 2>&1 || true
             helm repo build >/dev/null 2>&1 || true
-            helm dependency build . &&
+            helm dependency build . >/dev/null 2>&1
             helm template "$ARGOCD_APP_NAME" \
               --include-crds \
               -n "$ARGOCD_APP_NAMESPACE" \
