@@ -1,0 +1,36 @@
+image: docker:24.0.7
+
+services:
+  - name : docker:24.0.7
+
+stages:
+  - validate
+
+validate_argocd_avp_render:
+  stage: validate
+  image: alpine:3.20
+  variables:
+    VAULT_ADDR: "https://vault.vault.svc:8200"
+    AVP_TYPE: "vault"
+    AVP_AUTH_TYPE: "approle"
+    AVP_KV_VERSION: "2"
+    # Nếu runner không trust CA nội bộ, mount file CA và set biến này:
+    # VAULT_CACERT: "/builds/$CI_PROJECT_PATH/.ci/vault-ca.crt"
+  before_script:
+    - apk add --no-cache bash curl git kubectl
+    - curl -sSL https://get.helm.sh/helm-v3.15.4-linux-amd64.tar.gz | tar -xz
+    - mv linux-amd64/helm /usr/local/bin/helm
+    - curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.13.3/argocd-linux-amd64
+    - chmod +x /usr/local/bin/argocd
+    - curl -sSL -o /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64
+    - chmod +x /usr/local/bin/yq
+    - curl -sSL -o /usr/local/bin/argocd-vault-plugin https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v1.18.1/argocd-vault-plugin_1.18.1_linux_amd64
+    - chmod +x /usr/local/bin/argocd-vault-plugin
+    - export AVP_ROLE_ID="$CI_VAULT_ROLE_ID"
+    - export AVP_SECRET_ID="$CI_VAULT_SECRET_ID"
+    - chmod +x scripts/validate-generated-apps.sh
+  script:
+    - ./scripts/validate-generated-apps.sh
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH
